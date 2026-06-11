@@ -1,0 +1,4 @@
+# Isi dengan domain/URL yang kamu miliki atau punya izin tertulis untuk discan.
+# Contoh:
+# https://example.com
+# https://subdomain.example.com
