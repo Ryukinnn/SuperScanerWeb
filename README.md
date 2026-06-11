@@ -112,6 +112,14 @@ Report tersimpan di folder `reports/`:
 - `domain-timestamp.json`
 - `domain-timestamp.md`
 
+Saat scan selesai, terminal dan report akan menampilkan informasi detail:
+
+- Ringkasan keamanan: highest severity, jumlah modul berjalan, modul dengan temuan, modul actionable, dan jumlah URL/path berisiko.
+- Kandidat email resmi dari website yang sedang discan.
+- Daftar URL/path berisiko prioritas lengkap dengan severity, status HTTP jika ada, modul sumber, dan alasan risiko.
+- Katalog **20 modul utama** bernomor `1` sampai `20`, masing-masing dengan fungsi, kegunaan, dan output keamanan yang berbeda.
+- Ringkasan hasil semua modul, jumlah finding, jumlah URL berisiko per modul, dan detail evidence.
+
 Setiap modul menyimpan:
 
 - `module_id`
@@ -123,6 +131,12 @@ Setiap modul menyimpan:
 - `evidence`
 - `recommendations`
 - `official_emails`
+
+Field tambahan pada JSON report:
+
+- `security_summary`
+- `module_catalog_20`
+- `risky_urls`
 
 ## Catatan Etika dan Scope
 
