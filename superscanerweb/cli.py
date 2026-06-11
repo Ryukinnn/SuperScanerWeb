@@ -100,7 +100,18 @@ def main(argv: list[str] | None = None) -> int:
         print(f"[!] Gagal menjalankan scan: {exc}")
         return 1
 
-    print("[+] Ringkasan:")
+    json_path, md_path, payload = write_reports(ctx, results)
+    security_summary = payload["security_summary"]
+    risky_urls = payload["risky_urls"]
+
+    print("[+] Ringkasan keamanan detail:")
+    print(f"    Highest severity : {security_summary['highest_severity']}")
+    print(f"    Modul dijalankan : {security_summary['modules_executed']}")
+    print(f"    Modul temuan     : {security_summary['modules_with_findings']}")
+    print(f"    Modul actionable : {security_summary['actionable_modules']}")
+    print(f"    URL/path risiko  : {security_summary['risky_url_count']}")
+    print("")
+    print("[+] Ringkasan modul:")
     for item in sorted(results, key=lambda r: severity_rank(r.severity), reverse=True):
         marker = "skip" if item.skipped else item.severity
         print(f"    [{marker:8}] {item.module_id:24} {item.summary}")
@@ -112,7 +123,17 @@ def main(argv: list[str] | None = None) -> int:
     else:
         print("    Belum ditemukan. Cek report untuk detail sumber.")
 
-    json_path, md_path = write_reports(ctx, results)
+    print("")
+    print("[+] URL/path berisiko prioritas:")
+    if risky_urls:
+        for idx, entry in enumerate(risky_urls[:20], start=1):
+            status = f" status={entry['status']}" if entry["status"] is not None else ""
+            print(f"    {idx:02}. [{entry['severity']}] {entry['url']}{status}")
+            print(f"        Modul : {entry['module_name']}")
+            print(f"        Alasan: {entry['reason']}")
+    else:
+        print("    Tidak ada URL/path berisiko yang terkonfirmasi dari evidence modul yang berjalan.")
+
     print("")
     print(f"[+] JSON report : {json_path}")
     print(f"[+] MD report   : {md_path}")
